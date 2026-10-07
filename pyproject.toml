@@ -1,17 +1,100 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatchling" ]
+
 [project]
 name = "dqn-cart-pole"
 version = "0.1.0"
+description = "Double DQN agent for Gymnasium CartPole."
+readme = "README.md"
 requires-python = ">=3.14"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+]
 dependencies = [
-    "gymnasium[classic-control]>=1.3.0",
-    "imageio>=2.38.0",
-    "torch>=2.14.1",
+  "gymnasium[classic-control]>=1.3.0",
+  "imageio>=2.38.0",
+  "loguru>=0.7.3",
+  "msgspec>=0.22.0",
+  "pydantic>=2.13.5",
+  "rich>=15.0.0",
+  "torch>=2.14.1",
+  "typer>=0.27.2",
+]
+[project.scripts]
+dqn = "dqn.cli:app"
+
+[dependency-groups]
+dev = [
+  "pytest>=9.1.1",
+  "ruff>=0.16.9",
+  "ssort>=0.17.0",
+  "ty>=0.0.84",
 ]
 
-# [[tool.uv.index]]
-# name = "pytorch-cu130"
-# url = "https://download.pytorch.org/whl/cu130"
-# explicit = true
+[tool.hatch.build.targets.wheel]
+packages = [ "src/dqn" ]
 
-# [tool.uv.sources]
-# torch = { index = "pytorch-cu130" }
+[tool.uv]
+python-preference = "only-managed"
+exclude-newer = "7 days"
+
+[tool.ruff]
+target-version = "py314"
+line-length = 160
+src = [ "./src", "./tests" ]
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+line-ending = "lf"
+skip-magic-trailing-comma = false
+docstring-code-line-length = 160
+docstring-code-format = true
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+  "ANN201", # missing-return-type-undocumented-public-function
+  "D103",   # undocumented-public-function
+  "INP001", # implicit-namespace-package (tests are not a package)
+  "S101",   # assert (idiomatic in pytest)
+]
+[tool.ruff.lint.isort]
+force-single-line = true
+force-sort-within-sections = true
+lines-after-imports = 2
+section-order = [ "future", "standard-library", "third-party", "first-party", "local-folder" ]
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+[tool.ruff.lint.pylint]
+max-args = 7
+max-branches = 20
+max-returns = 6
+max-statements = 60
+[tool.ruff.lint]
+select = [ "ALL" ]
+ignore = [
+  "COM812", # missing-trailing-comma (formatter conflict)
+  "CPY001", # missing-copyright-notice (license lives in LICENSE)
+  "D100",   # undocumented-public-module (no module docstrings for now)
+  "D104",   # undocumented-public-package (no module docstrings for now)
+  "FIX002", # line-contains-todo
+  "TD003",  # missing-todo-link (todos aren't tied to issues)
+]
+fixable = [ "ALL" ]
+unfixable = []
+
+[tool.pyproject-fmt]
+column_width = 120
+indent = 2
+keep_full_version = true
+generate_python_version_classifiers = true
+table_format = "long"
+
+[tool.ty.environment]
+root = [ "./src" ]
+python-version = "3.14"
+
+[tool.pytest.ini_options]
+testpaths = [ "tests" ]
+addopts = [ "--strict-markers" ]

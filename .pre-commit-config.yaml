@@ -1,0 +1,64 @@
+fail_fast: true
+
+repos:
+  - repo: builtin
+    hooks:
+      - id: trailing-whitespace
+        priority: 0
+      - id: end-of-file-fixer
+        priority: 0
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        priority: 0
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.10
+    hooks:
+      - id: ruff-check
+        args: [--fix, --unsafe-fixes]
+        priority: 0
+      - id: ruff-format
+        priority: 0
+
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: v2.30.1
+    hooks:
+      - id: pyproject-fmt
+        priority: 0
+
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: "0.26"
+    hooks:
+      - id: validate-pyproject
+        priority: 1
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        priority: 1
+
+  - repo: local
+    hooks:
+      - id: sorting
+        name: ssort
+        entry: uv run ssort
+        language: system
+        types: [python]
+        priority: 0
+
+      - id: typing
+        name: ty
+        entry: uv run ty check
+        language: system
+        types: [python]
+        pass_filenames: false
+        priority: 2
+
+      - id: tests
+        name: pytest
+        entry: uv run pytest
+        language: system
+        types: [python]
+        pass_filenames: false
+        priority: 2
