@@ -3,8 +3,6 @@ from pydantic import Field
 
 
 class TrainingConfig(BaseModel, frozen=True):
-    """Hyperparameters for one training run, defaults tuned for CartPole."""
-
     env_id: str = "CartPole-v1"
     seed: int = 1
     total_steps: int = Field(default=500_000, gt=0)
@@ -22,3 +20,8 @@ class TrainingConfig(BaseModel, frozen=True):
     exploration_fraction: float = Field(default=0.5, gt=0, le=1)
     eval_interval: int = Field(default=10_000, gt=0)
     eval_episodes: int = Field(default=10, gt=0)
+
+    @property
+    def exploration_steps(self) -> int:
+        # never zero, so a run of a step or two still has a schedule to follow
+        return max(1, int(self.exploration_fraction * self.total_steps))

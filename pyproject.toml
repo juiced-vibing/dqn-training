@@ -1,7 +1,3 @@
-[build-system]
-build-backend = "hatchling.build"
-requires = [ "hatchling" ]
-
 [project]
 name = "dqn-cart-pole"
 version = "0.1.0"
@@ -18,13 +14,12 @@ dependencies = [
   "imageio>=2.38.0",
   "loguru>=0.7.3",
   "msgspec>=0.22.0",
+  "numpy>=2.5.3",
   "pydantic>=2.13.5",
   "rich>=15.0.0",
   "torch>=2.14.1",
   "typer>=0.27.2",
 ]
-[project.scripts]
-dqn = "dqn.cli:app"
 
 [dependency-groups]
 dev = [
@@ -34,12 +29,10 @@ dev = [
   "ty>=0.0.84",
 ]
 
-[tool.hatch.build.targets.wheel]
-packages = [ "src/dqn" ]
-
 [tool.uv]
 python-preference = "only-managed"
 exclude-newer = "7 days"
+package = false
 
 [tool.ruff]
 target-version = "py314"
@@ -53,9 +46,11 @@ skip-magic-trailing-comma = false
 docstring-code-line-length = 160
 docstring-code-format = true
 [tool.ruff.lint.per-file-ignores]
+"src/*.py" = [
+  "INP001", # implicit-namespace-package (src is the import root, not a package)
+]
 "tests/**" = [
   "ANN201", # missing-return-type-undocumented-public-function
-  "D103",   # undocumented-public-function
   "INP001", # implicit-namespace-package (tests are not a package)
   "S101",   # assert (idiomatic in pytest)
 ]
@@ -64,8 +59,6 @@ force-single-line = true
 force-sort-within-sections = true
 lines-after-imports = 2
 section-order = [ "future", "standard-library", "third-party", "first-party", "local-folder" ]
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
 [tool.ruff.lint.pylint]
 max-args = 7
 max-branches = 20
@@ -76,8 +69,7 @@ select = [ "ALL" ]
 ignore = [
   "COM812", # missing-trailing-comma (formatter conflict)
   "CPY001", # missing-copyright-notice (license lives in LICENSE)
-  "D100",   # undocumented-public-module (no module docstrings for now)
-  "D104",   # undocumented-public-package (no module docstrings for now)
+  "D",      # pydocstyle (no docstrings, a short comment where the reason is not obvious)
   "FIX002", # line-contains-todo
   "TD003",  # missing-todo-link (todos aren't tied to issues)
 ]
@@ -97,4 +89,5 @@ python-version = "3.14"
 
 [tool.pytest.ini_options]
 testpaths = [ "tests" ]
+pythonpath = [ "src" ]
 addopts = [ "--strict-markers" ]

@@ -1,6 +1,6 @@
 import numpy as np
 
-from dqn.agent.replay_buffer import ReplayBuffer
+from agent.replay_buffer import ReplayBuffer
 
 
 def test_overwrites_oldest_transitions_once_full():

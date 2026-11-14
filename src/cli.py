@@ -7,15 +7,15 @@ from loguru import logger
 import torch
 import typer
 
-from dqn.config import TrainingConfig
-from dqn.consts import GIF_FRAMES_PER_SECOND
-from dqn.env.evaluation import record_episode
-from dqn.training import run_training
-from dqn.utils.display import TrainingDisplay
-from dqn.utils.display import console
-from dqn.utils.log import configure_logging
-from dqn.utils.metrics import Metrics
-from dqn.utils.metrics import MetricsWriter
+from config import TrainingConfig
+from consts import GIF_FRAMES_PER_SECOND
+from env.evaluation import record_episode
+from training import run_training
+from utils.display import TrainingDisplay
+from utils.display import console
+from utils.log import configure_logging
+from utils.metrics import Metrics
+from utils.metrics import MetricsWriter
 
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)

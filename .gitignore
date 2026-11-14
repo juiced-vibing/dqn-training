@@ -225,3 +225,6 @@ __marimo__/
 # Training outputs
 runs/
 *.pt
+
+# LLMs
+.claude/

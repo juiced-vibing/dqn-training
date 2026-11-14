@@ -9,9 +9,9 @@ from rich.progress import TextColumn
 from rich.progress import TimeRemainingColumn
 from rich.table import Table
 
-from dqn.utils.metrics import EpisodeMetrics
-from dqn.utils.metrics import EvaluationMetrics
-from dqn.utils.metrics import Metrics
+from utils.metrics import EpisodeMetrics
+from utils.metrics import EvaluationMetrics
+from utils.metrics import Metrics
 
 
 if TYPE_CHECKING:
@@ -22,8 +22,6 @@ console = Console()
 
 
 class TrainingDisplay:
-    """Live progress bar during training, evaluation table once it ends."""
-
     def __init__(self, total_steps: int) -> None:
         self.__progress = Progress(
             BarColumn(),
@@ -60,7 +58,6 @@ class TrainingDisplay:
         return table
 
     def update(self, metrics: Metrics) -> None:
-        """Refresh the progress bar from a new metrics record."""
         match metrics:
             case EpisodeMetrics():
                 self.__progress.update(
@@ -73,11 +70,11 @@ class TrainingDisplay:
                 self.__evaluations.append(metrics)
                 self.__progress.update(self.__task, completed=metrics.step, evaluation_return=metrics.mean_return)
 
-    def __enter__(self) -> Self:  # noqa: D105
+    def __enter__(self) -> Self:
         self.__progress.start()
         return self
 
-    def __exit__(  # noqa: D105
+    def __exit__(
         self,
         exception_type: type[BaseException] | None,
         exception: BaseException | None,

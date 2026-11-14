@@ -1,12 +1,13 @@
-"""Probe tests: tiny problems with a known optimal Q, each isolating one part of DQN."""
-
 import numpy as np
 import pytest
 
-from dqn.agent.dqn_agent import DQNAgent
-from dqn.agent.replay_buffer import ReplayBuffer
-from dqn.config import TrainingConfig
+from agent.dqn_agent import DQNAgent
+from agent.replay_buffer import ReplayBuffer
+from config import TrainingConfig
+from env.spec import EnvSpec
 
+
+# probe tests: tiny problems with a known optimal q, each isolating one part of dqn
 
 _STATE_A = np.array([0.0], dtype=np.float32)
 _STATE_B = np.array([1.0], dtype=np.float32)
@@ -14,7 +15,7 @@ _STATE_B = np.array([1.0], dtype=np.float32)
 
 def _make_agent(action_count: int = 1, gamma: float = 0.99) -> DQNAgent:
     config = TrainingConfig(learning_rate=1e-2, hidden_size=32, gamma=gamma, seed=0)
-    return DQNAgent(obs_size=1, action_count=action_count, config=config)
+    return DQNAgent(EnvSpec("probe", obs_size=1, action_count=action_count), config)
 
 
 def _train(agent: DQNAgent, buffer: ReplayBuffer, updates: int) -> None:

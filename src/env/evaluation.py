@@ -5,12 +5,12 @@ import gymnasium as gym
 from gymnasium.wrappers import RenderCollection
 import numpy as np
 
-from dqn.consts import EVALUATION_SEED_OFFSET
-from dqn.utils.metrics import EvaluationMetrics
+from consts import EVALUATION_SEED_OFFSET
+from utils.metrics import EvaluationMetrics
 
 
 if TYPE_CHECKING:
-    from dqn.agent.dqn_agent import DQNAgent
+    from agent.dqn_agent import DQNAgent
 
 
 def _play_greedy_episode(agent: DQNAgent, env: gym.Env, seed: int) -> float:
@@ -27,7 +27,6 @@ def _play_greedy_episode(agent: DQNAgent, env: gym.Env, seed: int) -> float:
 
 
 def evaluate(agent: DQNAgent, env_id: str, episode_count: int, step: int) -> EvaluationMetrics:
-    """Run the greedy policy on held-out seeds and summarize its returns."""
     env = gym.make(env_id)
 
     try:
@@ -39,7 +38,6 @@ def evaluate(agent: DQNAgent, env_id: str, episode_count: int, step: int) -> Eva
 
 
 def record_episode(agent: DQNAgent, env_id: str) -> list[np.ndarray]:
-    """Play one greedy episode and return its rendered RGB frames."""
     env = RenderCollection(gym.make(env_id, render_mode="rgb_array"))
 
     try:

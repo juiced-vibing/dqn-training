@@ -4,8 +4,6 @@ import torch
 
 
 class Batch(msgspec.Struct, frozen=True):
-    """Sampled transitions as tensors, one row per transition."""
-
     obs: torch.Tensor
     actions: torch.Tensor
     rewards: torch.Tensor
@@ -14,8 +12,6 @@ class Batch(msgspec.Struct, frozen=True):
 
 
 class ReplayBuffer:
-    """Fixed-size ring buffer of transitions, overwriting the oldest once full."""
-
     def __init__(self, capacity: int, obs_size: int, seed: int) -> None:
         self.__obs = np.zeros((capacity, obs_size), dtype=np.float32)
         self.__next_obs = np.zeros((capacity, obs_size), dtype=np.float32)
@@ -39,12 +35,6 @@ class ReplayBuffer:
         *,
         is_done: bool,
     ) -> None:
-        """
-        Store one transition.
-
-        `is_done` must be the environment's `terminated` flag, not `truncated`,
-        a time-limit cut still has future value to bootstrap from.
-        """
         index = self.__index
 
         self.__obs[index] = obs
@@ -54,11 +44,11 @@ class ReplayBuffer:
         self.__rewards[index] = reward
         self.__dones[index] = is_done
 
+        # once full, the oldest transition is overwritten
         self.__index = (index + 1) % self.__capacity
         self.__size = min(self.__size + 1, self.__capacity)
 
     def sample(self, batch_size: int) -> Batch:
-        """Draw `batch_size` transitions uniformly, with replacement."""
         indices = self.__rng.integers(0, self.__size, size=batch_size)
         return Batch(
             obs=torch.from_numpy(self.__obs[indices]),
@@ -68,5 +58,5 @@ class ReplayBuffer:
             dones=torch.from_numpy(self.__dones[indices]),
         )
 
-    def __len__(self) -> int:  # noqa: D105
+    def __len__(self) -> int:
         return self.__size
