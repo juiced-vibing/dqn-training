@@ -23,7 +23,7 @@ app = typer.Typer(no_args_is_help=True, add_completion=False)
 
 @app.callback()
 def main() -> None:
-    """Train DQN agents on Gymnasium environments."""
+    """Train DQN agents on Gymnasium environments"""
 
 
 def _create_run_directory(root: Path, config: TrainingConfig) -> Path:
@@ -39,7 +39,7 @@ def train(
     seed: int = 1,
     runs_directory: Path = Path("runs"),
 ) -> None:
-    """Train an agent, then save its best weights, metrics and a gif of it playing."""
+    """Train an agent, then save its best weights, metrics and a gif of it playing"""
     torch.set_num_threads(1)  # extra threads cost more in dispatch than they save
 
     config = TrainingConfig(total_steps=total_steps, seed=seed)
